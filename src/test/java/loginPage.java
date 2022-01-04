@@ -14,5 +14,5 @@ import static com.codeborne.selenide.Selenide.open;
         $(".button__text").click();
     }
 
-     // тут методы извлечения номера карты и баланса
+
 }
