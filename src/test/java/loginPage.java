@@ -5,7 +5,7 @@ import static com.codeborne.selenide.Selenide.open;
     public loginPage() {
     }
 
-    private void DoneUser(){
+    public static void DoneUser(){
         open("http://localhost:9999");
         $("[data-test-id='login'] input").setValue("vasya");
         $("[data-test-id='password'] input").setValue("qwerty123");
