@@ -18,11 +18,12 @@ public class TransactionTest {
     @Test
     @DisplayName("transfer from account No. 1 to account No. 2")
     void shouldTransferFromAccount1ToAccount2() {
-        TransactionHelper.DashboardPage dashboardPage = new TransactionHelper.DashboardPage();
-        int moneyStart =dashboardPage.getFirstCardBalance;
+        DashboardPage dashboardPage = new DashboardPage();
+        int moneyStart =dashboardPage.getFirstCardBalance();
         transactionHelper.transaction1();
         int expected = moneyStart + transactionHelper.amount;
-        int actual = dashboardPage.getFirstCardBalance;
+        //int expected = 0;
+        int actual = dashboardPage.getFirstCardBalance();
         assertEquals(expected, actual);
 
     }
