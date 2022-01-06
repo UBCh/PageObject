@@ -60,11 +60,11 @@ public class TransactionTest {
           transactionHelper.transaction1(moneyStart+amount);
           transactionHelper.transaction2(amount);
       }
-        //$(".notification__content").shouldBe(visible).shouldHave(exactText("Ошибка! "));
-        //transactionHelper.transaction2();
-        int actual = dashboardPage.getCardBalance(0);
-        assertEquals( -amount, actual);
-        transactionHelper.transaction1(amount);
+        $(".notification__content").shouldBe(visible).shouldHave(exactText("Ошибка! "));
+        transactionHelper.transaction2(amount);
+        //int actual = dashboardPage.getCardBalance(0);
+        //assertEquals( -amount, actual);
+        //transactionHelper.transaction1(amount);
     }
     @Test
     @DisplayName("transfer from account No. 2 to account No. 1,with balance=0 ")
@@ -80,10 +80,10 @@ public class TransactionTest {
             transactionHelper.transaction2(moneyStart+amount);
             transactionHelper.transaction1(amount);
         }
-        //$(".notification__content").shouldBe(visible).shouldHave(exactText("Ошибка! "));
-        //transactionHelper.transaction1();
-        int actual = dashboardPage.getCardBalance(1);
-        assertEquals( -amount, actual);
-        transactionHelper.transaction2(amount);
+        $(".notification__content").shouldBe(visible).shouldHave(exactText("Ошибка!"));
+        transactionHelper.transaction1(amount);
+        //int actual = dashboardPage.getCardBalance(1);
+        //assertEquals( -amount, actual);
+        //transactionHelper.transaction2(amount);
     }
 }
