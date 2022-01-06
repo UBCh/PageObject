@@ -18,8 +18,7 @@ public class TransactionHelper {
     String score2;
 
 
-    public TransactionHelper(int amount, String score1, String score2) {
-        this.amount = amount;
+    public TransactionHelper(String score1, String score2) {
         this.score1 = score1;
         this.score2 = score2;
     }
@@ -28,7 +27,7 @@ public class TransactionHelper {
     }
 
 
-    public void transaction1() {
+    public void transaction1(int amount) {
         // DashboardPage dashboardPage = new DashboardPage();
         //loginPage.DoneUser();
 
@@ -42,7 +41,7 @@ public class TransactionHelper {
 
     }
 
-    public void transaction2() {
+    public void transaction2(int amount) {
         //loginPage.DoneUser();
         //$$(".list__item").find(exactText(score2)).click();
         // $(".button__text").click();
