@@ -19,11 +19,23 @@ public class TransactionTest {
     @DisplayName("transfer from account No. 1 to account No. 2")
     void shouldTransferFromAccount1ToAccount2() {
         DashboardPage dashboardPage = new DashboardPage();
-        int moneyStart =dashboardPage.getFirstCardBalance();
+        int moneyStart =dashboardPage.getCardBalance(0);
         transactionHelper.transaction1();
         int expected = moneyStart + transactionHelper.amount;
         //int expected = 0;
-        int actual = dashboardPage.getFirstCardBalance();
+        int actual = dashboardPage.getCardBalance(0);
+        assertEquals(expected, actual);
+
+    }
+    @Test
+    @DisplayName("transfer from account No. 2 to account No. 1")
+    void shouldTransferFromAccount2ToAccount1() {
+        DashboardPage dashboardPage = new DashboardPage();
+        int moneyStart =dashboardPage.getCardBalance(1);
+        transactionHelper.transaction2();
+        int expected = moneyStart + transactionHelper.amount;
+        //int expected = 0;
+        int actual = dashboardPage.getCardBalance(1);
         assertEquals(expected, actual);
 
     }

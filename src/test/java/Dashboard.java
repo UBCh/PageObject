@@ -1,10 +1,12 @@
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
 import lombok.val;
+
+import java.util.List;
 
 import static com.codeborne.selenide.Selenide.$$;
 
- class DashboardPage {
-
+class DashboardPage {
 
     private ElementsCollection cards = $$(".list__item");
     private final String balanceStart = "баланс: ";
@@ -13,8 +15,8 @@ import static com.codeborne.selenide.Selenide.$$;
     public DashboardPage() {
     }
 
-    public int getFirstCardBalance() {
-        val text = cards.first().text();
+    public int getCardBalance(int id) {
+        val text = cards.get(id).text();
         return extractBalance(text);
     }
 
