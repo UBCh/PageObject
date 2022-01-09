@@ -1,12 +1,11 @@
-import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.SelenideElement;
-import lombok.val;
+package page;
 
-import java.util.List;
+import com.codeborne.selenide.ElementsCollection;
+import lombok.val;
 
 import static com.codeborne.selenide.Selenide.$$;
 
-class DashboardPage {
+public class DashboardPage {
 
     private ElementsCollection cards = $$(".list__item");
     private final String balanceStart = "баланс: ";
