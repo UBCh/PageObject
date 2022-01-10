@@ -68,6 +68,28 @@ public class TransactionTest {
         TransactionHelper.initialBalance2();
 
     }
+    @Test
+    @DisplayName("transfer from account No. 1 to account No. 2 -double balance")
+    void shouldTransferDoubleBalance1() {
+        int balanceStart = DashboardPage.getCardBalance(0);
+        int amaunt = balanceStart*2;
+        TransactionHelper.transaction1(amaunt);
+        int expected = -balanceStart;
+        int actual = DashboardPage.getCardBalance(0);
+        assertEquals(expected, actual);
+        TransactionHelper.initialBalance2();
+    }
+    @Test
+    @DisplayName("transfer from account No. 2 to account No. 1 -double balance")
+    void shouldTransferDoubleBalance2() {
+        int balanceStart = DashboardPage.getCardBalance(1);
+        int amaunt = balanceStart*2;
+        TransactionHelper.transaction2(amaunt);
+        int expected = -balanceStart;
+        int actual = DashboardPage.getCardBalance(1);
+        assertEquals(expected, actual);
+        TransactionHelper.initialBalance2();
+    }
 
     @Test
     @DisplayName("transfer from account No. 2 to account No. 1,with balance=0 ")
