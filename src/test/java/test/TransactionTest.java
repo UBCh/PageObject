@@ -30,12 +30,12 @@ public class TransactionTest {
         clearBrowserCache();
     }
 
+
     @Test
     @DisplayName("transfer from account No. 2 to account No. 1")
     void shouldTransferFromAccount2ToAccount1() {
         int amaunt = 1000;
         int balanceStart = DashboardPage.getCardBalance(0);
-        //TransactionHelper.initialBalance2();
         TransactionHelper.transaction2(amaunt);
         int expected = balanceStart + amaunt;
         int actual = DashboardPage.getCardBalance(0);
