@@ -1,29 +1,26 @@
 package test;
 
 import data.DataHelper;
-import data.TransactionHelper;
 import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.Keys;
 import page.DashboardPage;
 import page.LoginPage;
+import page.TransactionPage;
+import page.VerificationPage;
 
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.clearBrowserCache;
+import static data.DataHelper.*;
+import static java.awt.SystemColor.info;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static page.TransactionPage.*;
 
 public class TransactionTest {
 
-
-    @BeforeEach
-    void setup() {
-        open("http://localhost:9999");
-        DataHelper.DoneUser();
-    }
 
     @Before
     public void clearCache() {
@@ -32,113 +29,100 @@ public class TransactionTest {
 
 
     @Test
-    @DisplayName("transfer from account No. 2 to account No. 1")
-    void shouldTransferFromAccount2ToAccount1() {
-        int amaunt = 1000;
-        int balanceStart = DashboardPage.getCardBalance(0);
-        TransactionHelper.transaction2(amaunt);
-        int expected = balanceStart + amaunt;
-        int actual = DashboardPage.getCardBalance(0);
-        assertEquals(expected, actual);
-        TransactionHelper.initialBalance2();
-    }
-
-    @Test
     @DisplayName("transfer from account No. 1 to account No. 2")
     void shouldTransferFromAccount1ToAccount2() {
-        int amaunt = 1000;
-        int balanceStart = DashboardPage.getCardBalance(1);
-        TransactionHelper.transaction1(amaunt);
-        int expected = balanceStart + amaunt;
-        int actual = DashboardPage.getCardBalance(1);
-        assertEquals(expected, actual);
-        TransactionHelper.initialBalance2();
-
-    }
-
-    @Test
-    @DisplayName("transfer from account No. 1 to account No. 2,with balance=0 ")
-    void shouldTransferWithBalanceZeroAccount1() {
-        int amaunt = 5000;
-        TransactionHelper.balansZero1();
-        TransactionHelper.transaction1(amaunt);
-        int expected = -amaunt;
-        int actual = DashboardPage.getCardBalance(0);
-        assertEquals(expected, actual);
-        TransactionHelper.initialBalance2();
-
-    }
-    @Test
-    @DisplayName("transfer from account No. 1 to account No. 2 -double balance")
-    void shouldTransferDoubleBalance1() {
-        int balanceStart = DashboardPage.getCardBalance(0);
-        int amaunt = balanceStart*2;
-        TransactionHelper.transaction1(amaunt);
-        int expected = -balanceStart;
-        int actual = DashboardPage.getCardBalance(0);
-        assertEquals(expected, actual);
-        TransactionHelper.initialBalance2();
-    }
-    @Test
-    @DisplayName("transfer from account No. 2 to account No. 1 -double balance")
-    void shouldTransferDoubleBalance2() {
-        int balanceStart = DashboardPage.getCardBalance(1);
-        int amaunt = balanceStart*2;
-        TransactionHelper.transaction2(amaunt);
-        int expected = -balanceStart;
-        int actual = DashboardPage.getCardBalance(1);
-        assertEquals(expected, actual);
-        TransactionHelper.initialBalance2();
-    }
-
-    @Test
-    @DisplayName("transfer from account No. 2 to account No. 1,with balance=0 ")
-    void shouldTransferWithBalanceZeroAccount2() {
-        int amaunt = 5000;
-        TransactionHelper.balansZero2();
-        TransactionHelper.transaction2(amaunt);
-        int expected = -amaunt;
-        int actual = DashboardPage.getCardBalance(1);
-        assertEquals(expected, actual);
-        TransactionHelper.initialBalance1();
-    }
-
-    @Test
-    @DisplayName("transfer from account No. 1 to account No. 2, the number of 7 times")
-    void shouldTransferNumber7TimesNo1() {
-        int amaunt = 1000000;
-        int expected = DashboardPage.getCardBalance(1);
-        TransactionHelper.transaction1(amaunt);
-        int actual = DashboardPage.getCardBalance(1);
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    @DisplayName("transfer from account No. 2 to account No. 1, the number of 7 times")
-    void shouldTransferNumber7TimesNo2() {
-        int amaunt = 1000000;
-        int expected = DashboardPage.getCardBalance(0);
-        TransactionHelper.transaction2(amaunt);
-        int actual = DashboardPage.getCardBalance(0);
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    @DisplayName("replenishment with an empty amount fieldan account")
-    void shouldTransferAmauntField() {
-        $$(".button__text").get(0).click();
-        $(".button_theme_alfa-on-white").click();
-        $(".notification__content").shouldBe(visible).shouldHave(exactText("Ошибка! Произошла ошибка"));
-    }
-
-    @Test
-    @DisplayName("replenishment from an invalid account number")
-    void shouldTransferInvalidAccount() {
         int amount = 1000;
-        $$(".button__text").get(1).click();
-        $("[data-test-id='amount'] input").setValue(String.valueOf(amount));
-        $("[data-test-id='from'] input").setValue("0000000000000000000");
-        $(".button_theme_alfa-on-white").click();
-        $(".notification__content").shouldBe(visible).shouldHave(exactText("Ошибка! Произошла ошибка"));
+        open("http://localhost:9999");
+        LoginPage.validLogin(DataHelper.getAuthInfo());
+        var autoInfo = DataHelper.getAuthInfo();
+        var verificationCode = DataHelper.getVerificationCodeFor(autoInfo);
+        var dashboardPage = VerificationPage.validVerify(verificationCode);
+        var firstCardInfo = getFirstCardInfo();
+        var secondCardInfo = getSecondCardInfo();
+        int balanceSecondCard = dashboardPage.getCardBalance(secondCardInfo);
+        int balanceFirstCard = dashboardPage.getCardBalance(firstCardInfo);
+        var transactionPage = dashboardPage.selectCardToTransfer(secondCardInfo);
+        dashboardPage = transactionPage.makeTransfer(String.valueOf(amount), firstCardInfo);
+        var expectedBalanceSecondCard = balanceSecondCard + amount;
+        var expectedBalanceFirstCard = balanceFirstCard - amount;
+        var actualBalanceFirstCard = dashboardPage.getCardBalance(firstCardInfo);
+        var actualBalanceSecondCard = dashboardPage.getCardBalance(secondCardInfo);
+        assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard);
+        assertEquals(expectedBalanceSecondCard, actualBalanceSecondCard);
+
+    }
+
+    @Test
+    @DisplayName("transfer from account No. 2 to account No. 1")
+    void shouldTransferFromAccount2ToAccount1() {
+        int amount = 1000;
+        open("http://localhost:9999");
+        LoginPage.validLogin(DataHelper.getAuthInfo());
+        var autoInfo = DataHelper.getAuthInfo();
+        var verificationCode = DataHelper.getVerificationCodeFor(autoInfo);
+        var dashboardPage = VerificationPage.validVerify(verificationCode);
+        var firstCardInfo = getFirstCardInfo();
+        var secondCardInfo = getSecondCardInfo();
+        int balanceSecondCard = dashboardPage.getCardBalance(secondCardInfo);
+        int balanceFirstCard = dashboardPage.getCardBalance(firstCardInfo);
+        var transactionPage = dashboardPage.selectCardToTransfer(firstCardInfo);
+        sleep(5000);
+        dashboardPage = transactionPage.makeTransfer(String.valueOf(amount), secondCardInfo);
+        sleep(5000);
+        var expectedBalanceSecondCard = balanceSecondCard - amount;
+        var expectedBalanceFirstCard = balanceFirstCard + amount;
+        var actualBalanceFirstCard = dashboardPage.getCardBalance(firstCardInfo);
+        var actualBalanceSecondCard = dashboardPage.getCardBalance(secondCardInfo);
+        assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard);
+        assertEquals(expectedBalanceSecondCard, actualBalanceSecondCard);
+    }
+
+    @Test
+    @DisplayName("transfer from account No. 1 to account No. 2, checking the limit")
+    void shouldTransferFromAccount1ToAccount2CheckingLimit() {
+        int amount = 100000;
+        open("http://localhost:9999");
+        LoginPage.validLogin(DataHelper.getAuthInfo());
+        var autoInfo = DataHelper.getAuthInfo();
+        var verificationCode = DataHelper.getVerificationCodeFor(autoInfo);
+        var dashboardPage = VerificationPage.validVerify(verificationCode);
+        var firstCardInfo = getFirstCardInfo();
+        var secondCardInfo = getSecondCardInfo();
+        int balanceSecondCard = dashboardPage.getCardBalance(secondCardInfo);
+        int balanceFirstCard = dashboardPage.getCardBalance(firstCardInfo);
+        var transactionPage = dashboardPage.selectCardToTransfer(secondCardInfo);
+        dashboardPage = transactionPage.makeTransfer(String.valueOf(amount), firstCardInfo);
+        var expectedBalanceSecondCard = balanceSecondCard + amount;
+        var expectedBalanceFirstCard = balanceFirstCard - amount;
+        var actualBalanceFirstCard = dashboardPage.getCardBalance(firstCardInfo);
+        var actualBalanceSecondCard = dashboardPage.getCardBalance(secondCardInfo);
+        assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard);
+        assertEquals(expectedBalanceSecondCard, actualBalanceSecondCard);
+
+    }
+
+    @Test
+    @DisplayName("transfer from account No. 2 to account No. 1checking the limit")
+    void shouldTransferFromAccount2ToAccount1CheckingLimit() {
+        int amount = 100000;
+        open("http://localhost:9999");
+        LoginPage.validLogin(DataHelper.getAuthInfo());
+        var autoInfo = DataHelper.getAuthInfo();
+        var verificationCode = DataHelper.getVerificationCodeFor(autoInfo);
+        var dashboardPage = VerificationPage.validVerify(verificationCode);
+        var firstCardInfo = getFirstCardInfo();
+        var secondCardInfo = getSecondCardInfo();
+        int balanceSecondCard = dashboardPage.getCardBalance(secondCardInfo);
+        int balanceFirstCard = dashboardPage.getCardBalance(firstCardInfo);
+        var transactionPage = dashboardPage.selectCardToTransfer(firstCardInfo);
+        sleep(5000);
+        dashboardPage = transactionPage.makeTransfer(String.valueOf(amount), secondCardInfo);
+        sleep(5000);
+        var expectedBalanceSecondCard = balanceSecondCard - amount;
+        var expectedBalanceFirstCard = balanceFirstCard + amount;
+        var actualBalanceFirstCard = dashboardPage.getCardBalance(firstCardInfo);
+        var actualBalanceSecondCard = dashboardPage.getCardBalance(secondCardInfo);
+        assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard);
+        assertEquals(expectedBalanceSecondCard, actualBalanceSecondCard);
     }
 }

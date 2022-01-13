@@ -1,59 +1,29 @@
 package page;
 
+import com.codeborne.selenide.SelenideElement;
+import data.DataHelper;
+import lombok.SneakyThrows;
 import lombok.Value;
+
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.open;
+import static java.lang.Thread.sleep;
 
 public class LoginPage {
 
-    //int amount;
-
-    private  LoginPage() {
-    }
-    public static String getLogin() {
-        return "vasya";
-    }
-    public static String getPassword(){
-        return "qwerty123";
+    private LoginPage() {
     }
 
-    public static String getVerificationCodeFor() {
-        return "12345";
+    private static SelenideElement login = $("[data-test-id='login'] input");
+    private static SelenideElement password = $("[data-test-id='password'] input");
+    private static SelenideElement button = $(".button__text");
+
+    public static VerificationPage validLogin(DataHelper.AuthInfo info) {
+        login.setValue(info.getLogin());
+        password.setValue(info.getPassword());
+        button.click();
+        return new VerificationPage();
     }
 
-    public static String getFirstCardInfo() {
-        return "5559000000000001";
-    }
-
-    public static String getSecondCardInfo() {
-        return "5559000000000002";
-    }
-    public static int balanceFirst(){
-        return 10000;
-    }
-    public static int balanceSecond(){
-        return 10000;
-    }
-    @Value
-    public static class Login {
-        String login;
-        }
-
-    @Value
-       public static class Password {
-        String password;
-    }
-
-    @Value
-    public static class VerificationCode {
-        String code;
-    }
-
-    @Value
-    public static class CardInfo {
-        String cardNumber;
-    }
-   @Value
-    public static class BalanceCard {
-        int balanceFirst;
-        int balanceSecond;}
-   }
+}
 
