@@ -1,9 +1,9 @@
 package page;
 
-import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import data.DataHelper;
 
+import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
@@ -14,7 +14,6 @@ public class TransactionPage {
     private SelenideElement amountInput = $("[data-test-id='amount'] input");
     private SelenideElement fromInput = $("[data-test-id='from'] input");
     private SelenideElement transhUp = $(".button_theme_alfa-on-white");
-
     public TransactionPage() {
         transhPage.shouldBe(visible);
     }
@@ -26,4 +25,9 @@ public class TransactionPage {
         transhUp.click();
         return new DashboardPage();
     }
+      public static void getError(){
+          $(".notification__content").shouldBe(visible).shouldHave(exactText("Ошибка! Произошла ошибка"));
+     return;
+      }
+
 }

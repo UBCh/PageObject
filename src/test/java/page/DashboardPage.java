@@ -29,8 +29,7 @@ public class DashboardPage {
 
     public TransactionPage selectCardToTransfer(DataHelper.CardInfo cardInfo) {
         cards.findBy(text(cardInfo.getCardNumber().substring(12, 16))).$("button").click();
-        return new TransactionPage();
-    }
+        return new TransactionPage();}
 
     private static int extractBalance(String text) {
         val start = text.indexOf(balanceStart);
