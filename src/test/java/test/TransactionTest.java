@@ -146,15 +146,9 @@ public class TransactionTest {
         var expectedBalanceFirstCard = balanceFirstCard ;
         var actualBalanceFirstCard = dashboardPage.getCardBalance(firstCardInfo);
         var actualBalanceSecondCard = dashboardPage.getCardBalance(secondCardInfo);
-        //$(".notification__content").shouldBe(visible).shouldHave(exactText("Ошибка! Произошла ошибка"));
         assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard);
         assertEquals(expectedBalanceSecondCard, actualBalanceSecondCard);
 
-
-        //dashboardPage= ErrorPage.superTransfer (String.valueOf(amount), firstCardInfo);
-        //var expectedError = ErrorPage.error;
-        // var actualError = dashboardPage = transactionPage.makeTransfer(String.valueOf(amount), firstCardInfo);
-        //assertEquals(expectedError, actualError);
     }
     @Test
     @DisplayName("transfer from account No. 2 to account No. 1, checking the limit")
@@ -177,14 +171,8 @@ public class TransactionTest {
         var expectedBalanceFirstCard = balanceFirstCard ;
         var actualBalanceFirstCard = dashboardPage.getCardBalance(firstCardInfo);
         var actualBalanceSecondCard = dashboardPage.getCardBalance(secondCardInfo);
-       // $(".notification__content").shouldBe(visible).shouldHave(exactText("Ошибка! Произошла ошибка"));
-        assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard);
+       assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard);
         assertEquals(expectedBalanceSecondCard, actualBalanceSecondCard);
 
-
-        //dashboardPage= ErrorPage.superTransfer (String.valueOf(amount), firstCardInfo);
-        //var expectedError = ErrorPage.error;
-        // var actualError = dashboardPage = transactionPage.makeTransfer(String.valueOf(amount), firstCardInfo);
-        //assertEquals(expectedError, actualError);
     }
 }
